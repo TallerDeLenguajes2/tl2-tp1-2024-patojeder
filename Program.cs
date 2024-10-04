@@ -22,9 +22,11 @@ do
 {
         
     do
-    {Console.WriteLine("\nSeleccione la tarea a realizar: \n1)Dar de alta pedido.\n2)Asignar pedido a cadete.\n3)Cambiar pedido de estado.\n4)Reasignar el pedido a otro cadete.\n5)Salir.");
-                            int.TryParse(Console.ReadLine(), out op);
-    } while (op <1 || op>5);
+    {   
+        Console.WriteLine("\nSeleccione la tarea a realizar: \n1)Dar de alta pedido.\n2)Asignar pedido a cadete.\n3)Cambiar pedido de estado.\n4)Reasignar el pedido a otro cadete.\n5)Salir.");
+        int.TryParse(Console.ReadLine(), out op);
+
+    } while (op>5 || op<1);
 
  switch (op)
  {  
@@ -40,7 +42,7 @@ do
 
 
     case 3:
-            Menu.CambiarDeEstado(listaDePedidos);
+            Menu.CambiarDeEstado(listaCadetes);
     break;
 
 
@@ -48,9 +50,14 @@ do
             Menu.ReasignarPedido(listaCadetes);
     break;
 
-
+    case 5:
+        //Pedidos.VerDatosCliente(listaDePedidos);
+        //Menu.mostrarPedidosCadetes(listaCadetes);
+    
+    break;
+    
     default:
     break;
  }
 
-} while (true);
+} while (op<5 && op>0);

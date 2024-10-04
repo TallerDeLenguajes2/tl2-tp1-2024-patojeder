@@ -28,13 +28,17 @@ Console.WriteLine(cliente.Direccion);
 }
 
 
-public void VerDatosCliente(){
+public static void VerDatosCliente(List<Pedidos> listaDePedidos){
+    foreach (var pedido in listaDePedidos)
+    {
 Console.WriteLine("******* Datos Cliente ******");
-Console.WriteLine("Nombre: "+ cliente.Nombre);
-Console.WriteLine("Direccion: "+ cliente.Direccion);
-Console.WriteLine("Telefono: "+ cliente.Telefono);
-Console.WriteLine("Datos de la direccion: "+ cliente.DatosReferenciaDireccion);
-Console.WriteLine("*********************************************");
+Console.WriteLine("Nombre: "+ pedido.Cliente.Nombre);
+Console.WriteLine("Direccion: "+ pedido.cliente.Direccion);
+Console.WriteLine("Telefono: "+ pedido.cliente.Telefono);
+Console.WriteLine("Datos de la direccion: "+ pedido.cliente.DatosReferenciaDireccion);
+Console.WriteLine("*********************************************");        
+    }
+
 
 //corregir esto en tp2
 

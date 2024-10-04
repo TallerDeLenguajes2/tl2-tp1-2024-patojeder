@@ -22,67 +22,65 @@ public class Menu{
     Console.WriteLine("Ingrese observaciones: ");
     nuevoPedido.Obs=Console.ReadLine();
     nuevoPedido.Estado=EstadoPedido.cargado;
-    nuevoPedido.Numero=id++;
-    //id++;
+    nuevoPedido.Numero=listaPedidos.Count+1;
     listaPedidos.Add(nuevoPedido);
     
 }
 
-public static void AsignarPedido(List<Pedidos> listaDePedidos, List<Cadete> listaCadetes){
-
-    Console.WriteLine("ingrese el numero de pedido que desea asignar:");
+public static void AsignarPedido(List<Pedidos> listaDePedidos, List<Cadete> listaCadetes) {
+    Console.WriteLine("Ingrese el numero de pedido que desea asignar:");
     int numero;
     int.TryParse(Console.ReadLine(), out numero);
 
-    Console.WriteLine("ingrese la id del cadete cuyo pedido desea asignar:");
+    Console.WriteLine("Ingrese la id del cadete cuyo pedido desea asignar:");
     int id;
     int.TryParse(Console.ReadLine(), out id);
 
-    foreach (var pedido in listaDePedidos)
-    {
-        if (pedido.Numero==numero)
-        {
+    if (listaDePedidos != null) {
+        Pedidos pedidoAEliminar = null;
 
-                    foreach (var cadete in listaCadetes)
-                    {
-                        if (cadete.Id==id)
-                        {
-
-                                if (cadete.ListaPedidos == null)
-                                {
-                                    cadete.ListaPedidos = new List<Pedidos>();
-                                }   
-
-                            cadete.ListaPedidos.Add(pedido);
-                            break;
+        foreach (var pedido in listaDePedidos) {
+            if (pedido.Numero == numero) {
+                foreach (var cadete in listaCadetes) {
+                    if (cadete.Id == id) {
+                        if (cadete.ListaPedidos == null) {
+                            cadete.ListaPedidos = new List<Pedidos>();
                         }
+                        pedido.Estado = EstadoPedido.pendiente;
+                        cadete.ListaPedidos.Add(pedido);
+
+                        pedidoAEliminar = pedido;
+                        break;
                     }
-                    
+                }
+            }
 
-            
-        }else
-        {
-            Console.WriteLine($"-----------------------pedido no encontrado");
+            if (pedidoAEliminar != null) break;
         }
-        
+
+        if (pedidoAEliminar != null) {
+            listaDePedidos.Remove(pedidoAEliminar);
+        }
+    } else {
+        Console.WriteLine("No hay pedidos en la lista");
     }
-
-listaDePedidos.RemoveAt(numero);
-
-
-    
 }
-public static void CambiarDeEstado(List<Pedidos> listaDePedidos){
+
+
+//a este le tengo que cambiar para que controle segundonde este el pedido
+public static void CambiarDeEstado(List<Cadete> listaDeCadetes){
 
 
             int numero;
+            int bandera=0;
+            
     do
     {
             Console.WriteLine("ingrese la id del pedido cuyo estado desea cambiar:");
 
             int.TryParse(Console.ReadLine(), out numero);
 
-    } while (listaDePedidos.Count < numero  || numero < 0 );
+    } while (50 < numero  || numero < 0 );
 
             int estado;    
 
@@ -95,74 +93,35 @@ public static void CambiarDeEstado(List<Pedidos> listaDePedidos){
                 } while (estado>2 || estado<0);
 
 
-    foreach (var pedido in listaDePedidos)
+
+
+    foreach (var cadete in listaDeCadetes)
     {
-        if (pedido.Numero==numero)
+        if (cadete.ListaPedidos != null)
         {
-                pedido.Estado=(EstadoPedido)numero;
-                break;
-        }else
-        {
-            
-            Console.WriteLine("no se encontro el pedido");
+            foreach (var pedido in cadete.ListaPedidos.ToList()) //  el ToList() se usa para evitar problemas de modificación durante la iteración
+            {
+                if (pedido.Numero == numero)
+                {
+                    pedido.Estado=(EstadoPedido)numero;
+                    bandera=1;     
+                    break;
+                }
+            }
         }
     }
 
+    if (bandera==1)
+    {
+        Console.WriteLine("Estado del pedido cambiado con exito");
+    }else
+    {
+        Console.WriteLine($"No se encontro el pedido de id: {numero}");
+    }
     
 }
 
 
-/*public static void ReasignarPedido(List<Cadete> listaDeCadetes){
-int numero;
-int id;
-Pedidos pedidoAux;
-Console.WriteLine("ingrese el numero de pedido que quiere reasignar");
-int.TryParse(Console.ReadLine(), out numero);
-                foreach (var cadete in listaDeCadetes)
-                {
-                        foreach (var pedido in cadete.ListaPedidos)
-                        {
-                            if (pedido.Numero==numero)
-                            {
-                                    pedidoAux=pedido;
-                                    cadete.ListaPedidos.Remove(pedido);
-                                    break;
-
-                            }
-                        }
-                }
-
-    if (pedidoAux == null)
-    {
-        Console.WriteLine("Pedido no encontrado.");
-        return;
-    }
-                do
-                {
-                    Console.WriteLine("Ingrese el ID del cadete a asignar. ");
-
-                    int.TryParse(Console.ReadLine(), out id);
-
-                } while (id>2 || id<0);
-
-                foreach (var cadete in listaDeCadetes)
-                {
-                                if (cadete.ListaPedidos == null)
-                                {
-                                    cadete.ListaPedidos = new List<Pedidos>();
-                                }   
-
-                            cadete.ListaPedidos.Add(pedidoAux);
-                        
-                }
-
-                //listaDeCadetes[id].ListaPedidos.Add();ver de guardar el pedido
-
-    }*/
-
-
-
-//otra manera
 public static void ReasignarPedido(List<Cadete> listaDeCadetes)
 {
     int numero;
@@ -224,8 +183,33 @@ public static void ReasignarPedido(List<Cadete> listaDeCadetes)
 
 
 
+public static void mostrarPedidosCadetes(List<Cadete> listaDeCadetes)
+{
+
+    foreach (var cadete in listaDeCadetes)
+    {
+       Console.WriteLine($"****     pedidos del cadete numero {cadete.Id}     *********");
+
+       if (cadete.ListaPedidos!=null)
+       {
+        
+        foreach (var pedido in cadete.ListaPedidos)
+        {
+            Console.WriteLine($"Direccion {pedido.Cliente.Direccion}");
+            Console.WriteLine($"Nombre {pedido.Cliente.Nombre}");
+            Console.WriteLine($"Telefono {pedido.Cliente.Telefono}");
+            Console.WriteLine($"Referencia {pedido.Cliente.DatosReferenciaDireccion}");
+            Console.WriteLine($"observaciones {pedido.Obs}");
+            Console.WriteLine($"numero de pedido {pedido.Numero}");
+            Console.WriteLine($"Estado PEDIDO: {pedido.Estado}");
+        }
+
+       }
+
+        Console.WriteLine("+++++++++++++++++++++++++++++++");
+    }
 }
 
-
+}
 
 }

@@ -50,7 +50,6 @@ public class ArchivosCSV{
             var csv = new StringBuilder();
             csv.AppendLine("Nombre, Telefono, Direccion");
 
-            // Guardar solo el nombre y teléfono de la cadetería, ignorando la lista de cadetes
             var linea = $"{infoCadeteria.Nombre ?? "N/A"},{infoCadeteria.Telefono ?? "N/A"},{infoCadeteria.Direccion ?? "N/A"}";
             csv.AppendLine(linea);
 
